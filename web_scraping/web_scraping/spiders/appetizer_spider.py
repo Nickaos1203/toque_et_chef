@@ -31,7 +31,9 @@ class MarmiteSpider(scrapy.Spider):
         season = categories[0]
         category = categories[1]
 
-        tags = response.css("div.recipe-header__title div.main-title div.show-more__modal div.modal__tags a.modal__tag *::text").getall()
+        pre_tags = response.css("div.recipe-header__title div.main-title div.show-more__modal div.modal__tags a.modal__tag *::text").getall()
+        tags = [t.strip() for t in pre_tags]
+    
 
         duration = response.css("div.recipe-primary div.recipe-primary__item span::text").get()
         level = response.css("div.recipe-primary div.recipe-primary__item span::text")[1].get()
@@ -48,8 +50,15 @@ class MarmiteSpider(scrapy.Spider):
             clean_text = ' '.join(t.strip() for t in texts if t.strip())
             ingredients.append(clean_text)
 
-        steps = response.css("div.recipe-preparation div.recipe-step-list div.recipe-step-list__container p *::text").getall()
-        steps = [step.strip for step in steps]
+        # steps = response.css("div.recipe-preparation div.recipe-step-list div.recipe-step-list__container p *::text").getall()
+        steps = []
+        for step in response.css("div.recipe-preparation div.recipe-step-list div.recipe-step-list__container p"):
+            texts = step.css("*::text").getall()
+            strip_text = ' '.join(t.strip() for t in texts if t.strip())
+            clean_text = re.sub(r'[\n\r]+', '', strip_text)                     # supprimer de tous types d'espaces invisibles
+
+            steps.append(clean_text)
+
         author = response.css("div.recipe-author-note div.recipe-author-note__head div span.recipe-author-note__author-name::text").get()
 
         yield {
