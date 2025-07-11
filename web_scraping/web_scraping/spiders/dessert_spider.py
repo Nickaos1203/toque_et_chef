@@ -6,7 +6,7 @@ import re
 class MarmiteSpider(scrapy.Spider):
     name= "dessert_spider"
     allowed_domains = ["marmiton.org"]
-    start_urls = ["https://www.marmiton.org/recettes?type=dessert&page=" + str(x) for x in range(1, 3)]
+    start_urls = ["https://www.marmiton.org/recettes?type=dessert&page=" + str(x) for x in range(1, 100)]
 
 
     def parse(self, response):
@@ -23,7 +23,7 @@ class MarmiteSpider(scrapy.Spider):
                     cb_kwargs={'image_url': image_url}
                 )
 
-    
+
     def parse_recipe(self, response, image_url):
         title = response.css("div.recipe-header__title div.main-title h1::text").get()
 
