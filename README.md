@@ -16,3 +16,8 @@ Votre mission chez le client, en tant que consultant développeur IA de NeuralFo
 ## 🏗️ Architecture
 
 ## 🚀 Lancement du projet
+
+#### Pré-requis
+Assurez-vous d'avoir installer les éléments suivants : 
+- Ollama
+- llhama

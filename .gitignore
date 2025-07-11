@@ -1,2 +1,16 @@
+# environnement
 .venv
+
+# clé secrète
 .env
+
+# csv files / ipynb files / json files
+web_scraping/*.csv
+web_scraping/*.ipynb
+web_scraping/*.json
+
+# pycache
+*__pycache__/
+
+# db
+BackEnd/db.sqlite3
