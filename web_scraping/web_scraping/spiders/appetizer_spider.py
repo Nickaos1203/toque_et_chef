@@ -6,7 +6,7 @@ import re
 class MarmiteSpider(scrapy.Spider):
     name= "appetizer_spider"
     allowed_domains = ["marmiton.org"]
-    start_urls = ["https://www.marmiton.org/recettes?page=" + str(x) for x in range(1, 150)]
+    start_urls = ["https://www.marmiton.org/recettes?page=" + str(x) for x in range(1, 100)]
 
 
     def parse(self, response):
