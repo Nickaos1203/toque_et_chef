@@ -12,5 +12,12 @@ web_scraping/*.json
 # pycache
 *__pycache__/
 
+
+#Django apps
+
 # db
 BackEnd/db.sqlite3
+
+#migration folders
+*migrations/
+
