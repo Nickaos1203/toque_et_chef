@@ -6,3 +6,5 @@ pandas
 ipykernel
 django
 pillow
+djangorestframework
+django-cors-headers
