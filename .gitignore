@@ -16,7 +16,7 @@ web_scraping/*.json
 #Django apps
 
 # db
-BackEnd/db.sqlite3
+django_app/db.sqlite3
 
 #migration folders
 *migrations/
