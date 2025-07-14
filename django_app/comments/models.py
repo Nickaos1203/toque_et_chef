@@ -8,3 +8,6 @@ class Comment(models.Model):
     title = models.CharField(max_length=20)
     contain = models.TextField()
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.recipe.title + " : " + self.title

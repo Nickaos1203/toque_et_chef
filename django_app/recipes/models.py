@@ -27,3 +27,6 @@ class Recipe(models.Model):
     steps = models.TextField()
     date = models.DateField(auto_now_add=True)
 
+    def __str__(self):
+        return self.title
+
