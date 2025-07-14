@@ -11,33 +11,28 @@ for var in ['db_name', 'db_user', 'db_password', 'db_port']:
     print(f"{var} → {repr(val)}")
 
 
-conn = psycopg2.connect(
-    database=os.getenv("db_name"),
-    user=os.getenv("db_user"),
-    host='localhost',
-    password=os.getenv("db_password"),
-    port=os.getenv("db_port")
-)
-cur = conn.cursor()
 
-cur.execute("""
-    CREATE TABLE recipes(
-        id INTEGER PRIMARY KEY,
-        title VARCHAR(150) NOT NULL UNIQUE,
-        image VARCHAR(200) NOT NULL UNIQUE,
-        season VARCHAR(20),
-        category VARCHAR(20),
-        duration VARCHAR(20),
-        level VARCHAR(30),
-        cost VARCHAR(30),
-        number INTEGER,
-        persons_number VARCHAR(30),
-        ingredients TEXT NOT NULL,
-        steps TEXT NOT NULL,
-        date DATE NOT NULL DEFAULT CURRENT_DATE,
-        author VARCHAR(50));
-    """)
+def add_recipes(title, image_url, season, category, duration, level, cost, number, persons_number, ingredients, steps):
+    # Connexion with 'toque_et_chef' database
+    conn = psycopg2.connect(
+        database=os.getenv("db_name"),
+        user=os.getenv("db_user"),
+        host='localhost',
+        password=os.getenv("db_password"),
+        port=os.getenv("db_port")
+    )
+    cur = conn.cursor()
 
-conn.commit()
-cur.close()
-conn.close()
+    request = """
+        INSERT INTO recipes_recipe (
+            title, image_url, season, category, duration, level, cost, number, persons_number, ingredients, steps
+            )
+        VALUES (
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            );
+        """
+
+    cur.execute(request, (title, image_url, season, category, duration, level, cost, number, persons_number, ingredients, steps))
+    conn.commit()
+    cur.close()
+    conn.close()
