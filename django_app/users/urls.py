@@ -1,9 +1,9 @@
 from rest_framework.routers import DefaultRouter
-from .views import RecipeViewSet
+from .views import CustomUserViewSet
 from django.urls import path, include
 
 router = DefaultRouter()
-router.register(r'', RecipeViewSet)
+router.register(r'', CustomUserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),

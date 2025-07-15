@@ -8,3 +8,4 @@ django
 pillow
 djangorestframework
 django-cors-headers
+djangorestframework-simplejwt

@@ -28,7 +28,7 @@ class Recipe(models.Model):
     ingredients = models.TextField()
     steps = models.TextField()
     date = models.DateField(auto_now_add=True)
-    author = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+    author = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='recipes')
 
     def __str__(self):
         return self.title

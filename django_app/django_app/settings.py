@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # configuration django_rest_framework
     'rest_framework',
+    'rest_framework_simplejwt',
 
     # apps django
     'users',
@@ -148,3 +149,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Declaration of custom user
 AUTH_USER_MODEL = 'users.CustomUser'
+
+
+# Pagination management
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 4,
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+}
