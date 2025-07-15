@@ -5,3 +5,7 @@ psycopg2-binary
 pandas
 ipykernel
 django
+pillow
+djangorestframework
+django-cors-headers
+djangorestframework-simplejwt

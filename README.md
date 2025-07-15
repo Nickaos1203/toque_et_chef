@@ -21,3 +21,6 @@ Votre mission chez le client, en tant que consultant développeur IA de NeuralFo
 Assurez-vous d'avoir installer les éléments suivants : 
 - Ollama
 - llhama
+
+#### Création de la base de données PostgreSQL
+
