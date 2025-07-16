@@ -13,4 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        fields = ['username', 'email', 'phone_number', 'first_name', 'last_name', 'birthday_date', 'is_active', 'is_superuser', 'password', 'recipes', 'comments']
+
+
+# class CreateCustomUserSerializer(serializers.Serializer)
