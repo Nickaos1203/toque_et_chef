@@ -1,13 +1,13 @@
 from django.shortcuts import render
 
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from . import forms
 
-# Create your views here.
-class CustomUserViewSet(ModelViewSet):
 
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
-
-    
+def login_page(request):
+    form = forms.LoginForm()
+    if request.method == 'POST':
+        form = forms.LoginForm(request.POST)
+        if form.is_valid():
+            pass
+    return render(request, 'authentication/login.html', context={'form': form})
