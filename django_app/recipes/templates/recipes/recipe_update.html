@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}Modification de recette{% endblock %}
+
+{% block content %}
+
+<h2>Modifier la recette</h2>
+
+<form action="" method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Envoyer">
+</form>
+
+{% endblock %}

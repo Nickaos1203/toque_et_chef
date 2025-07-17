@@ -30,6 +30,15 @@ class Recipe(models.Model):
     date = models.DateField(auto_now_add=True)
     author = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True, related_name='recipes')
 
+    # conversion de texte en liste avec séparateur ";"
+    def display_tags_list(self):
+        return [item.strip() for item in self.tags.split(";") if item.strip()]
+
+    def display_ingredients_list(self):
+        return [item.strip() for item in self.ingredients.split(";") if item.strip()]
+
+    def display_steps_list(self):
+        return [item.strip() for item in self.steps.split(";") if item.strip()]
+    
     def __str__(self):
         return self.title
-

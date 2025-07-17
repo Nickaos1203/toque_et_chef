@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Toutes les recettes
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <h2>{{ recipe.title }}</h2>
+    <img src={{recipe.image_url}} alt="image{{recipe.title}}"/>
+    <h4>Caractéristiques :</h4>
+    <ul>
+        <li>Saison : {{recipe.season}}</li>
+        <li>Catégorie : {{recipe.category}}</li>
+        <li>tags : {{recipe.tags}}</li>
+        <li>Durée : {{recipe.duration}}</li>
+        <li>Niveau : {{recipe.level}}</li>
+        <li>Coût : {{recipe.cost}}</li>
+        <li>Nombre de personnes : {{recipe.persons_number}}</li>
+        {% if recipe.author.user %}
+        <li>Auteur : {{ recipe.author.username }}</li>
+        {% else %}
+        <li>Auteur : Un truc scraper</li>
+        {% endif %}
+    </ul>
+
+    <h4>Ingrédients :</h4>
+    <ul>
+    {% for ingredient in recipe.display_ingredients_list %}
+        <li>{{ingredient}}</li>
+    {% endfor %}
+    </ul>
+
+    <h4>Etapes :</h4>
+    <ol>
+    {% for step in recipe.display_steps_list %}
+        <li>{{step}}</li>
+    {% endfor %}
+    </ol>
+</div>
+
+<div>
+    <h2>Commentaires</h2>
+    {% for comment in comment %}
+    <ul>
+        <li>Titre : {{comment.title}}</li>
+        <li>Date : {{comment.date}}</li>
+        <li>Auteur : {{comment.author.username}}</li>
+        <li>Note : {{comment.grade}}</li>
+        <li>Avis : {{comment.contain}}</li>
+    </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -12,12 +12,18 @@ web_scraping/*.json
 # pycache
 *__pycache__/
 
-
-#Django apps
-
 # db
 django_app/db.sqlite3
 
 #migration folders
 *migrations/
 
+# Tailwind
+django_app/theme/static_src/node_modules/
+django_app/theme/static_src/.turbo/
+django_app/theme/static_src/dist/
+django_app/theme/static/css/
+django_app/theme/static/js/
+django_app/theme/.tailwind-debug/
+django_app/theme/static_src/package-lock.json
+django_app/theme/.npm/

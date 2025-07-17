@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Toutes les recettes
+{% endblock %}
+
+{% block content %}
+<h1>Liste des recettes</h1>
+
+{% for recipe in recipes %}
+<div>
+    <h2>{{ recipe.title }}</h2>
+    <img src={{recipe.image_url}} alt="image{{recipe.title}}"/>
+    <ul>
+        <li>Catégorie : {{recipe.category}}</li>
+        <li>tags : {{recipe.tags}}</li>
+        <li>Durée : {{recipe.duration}}</li>
+        <li>Niveau : {{recipe.level}}</li>
+        <li>Coût : {{recipe.cost}}</li>
+        <li>Nombre de personnes : {{recipe.persons_number}}</li>
+        {% if recipe.author.user %}
+        <li>Auteur : {{ recipe.author.username }}</li>
+        {% else %}
+        <li>Auteur : Un truc scraper</li>
+        <li><a href="{{ recipe.id }}">Plus de détail</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endfor %}
+
+{% endblock %}

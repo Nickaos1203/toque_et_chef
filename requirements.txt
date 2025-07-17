@@ -6,6 +6,7 @@ pandas
 ipykernel
 django
 pillow
-djangorestframework
-django-cors-headers
-djangorestframework-simplejwt
+django-tailwind
+# djangorestframework
+# django-cors-headers
+# djangorestframework-simplejwt
