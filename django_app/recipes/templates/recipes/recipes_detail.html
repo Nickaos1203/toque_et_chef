@@ -42,10 +42,10 @@ Toutes les recettes
 
 <div>
     <h2>Commentaires</h2>
-    {% for comment in comment %}
+    {% for comment in comments %}
     <ul>
         <li>Titre : {{comment.title}}</li>
-        <li>Date : {{comment.date}}</li>
+        <li>Date : {{comment.created_date}}</li>
         <li>Auteur : {{comment.author.username}}</li>
         <li>Note : {{comment.grade}}</li>
         <li>Avis : {{comment.contain}}</li>

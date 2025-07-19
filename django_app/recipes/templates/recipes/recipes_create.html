@@ -6,10 +6,12 @@
 
 <h2>Ajouter une nouvelle recette</h2>
 
-<form action="" method="post" novalidate>
+{% comment %} <form action="" method="post" novalidate>
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Envoyer">
-</form>
+</form> {% endcomment %}
+
+{{ form }}
 
 {% endblock %}

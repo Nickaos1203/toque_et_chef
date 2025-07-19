@@ -15,16 +15,16 @@ class Recipe(models.Model):
         DESSERT = 'Dessert'
 
 
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=200)
     image_url = models.URLField(max_length=250, null=True, blank=True)
-    season = models.CharField(choices=Season.choices, max_length=20)
-    category = models.CharField(choices=Category.choices, max_length=20)
+    season = models.CharField(choices=Season.choices, max_length=100)
+    category = models.CharField(choices=Category.choices, max_length=100)
     tags = models.TextField(null=True, blank=True)
-    duration = models.CharField(max_length=10)
-    level = models.CharField(max_length=20)
-    cost = models.CharField(max_length=20)
+    duration = models.CharField(max_length=100)
+    level = models.CharField(max_length=50)
+    cost = models.CharField(max_length=50)
     number = models.IntegerField()
-    persons_number = models.CharField(max_length=20)
+    persons_number = models.CharField(max_length=50)
     ingredients = models.TextField()
     steps = models.TextField()
     date = models.DateField(auto_now_add=True)
