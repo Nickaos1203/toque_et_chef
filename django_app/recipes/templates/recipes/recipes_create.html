@@ -6,12 +6,77 @@
 
 <h2>Ajouter une nouvelle recette</h2>
 
-{% comment %} <form action="" method="post" novalidate>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Envoyer">
-</form> {% endcomment %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
 
-{{ form }}
+        <div id="ingredients-container">
+            <label>Étapes :</label>
+            <div class="etape">
+                <input type="text" name="ingredient_1" placeholder="Ingrédient 1">
+            </div>
+        </div>
+
+        <button type="button" onclick="addIngredient()">Ajouter un ingrédient</button><br><br>
+
+        <div id="etapes-container">
+            <label>Étapes :</label>
+            <div class="etape">
+                <input type="text" name="step_1" placeholder="Étape 1">
+            </div>
+        </div>
+
+        <button type="button" onclick="addStep()">Ajouter une étape</button><br><br>
+
+        <button type="submit">Enregistrer</button>
+    </form>
+
+{% endblock %}
+
+
+
+{% block script %}
+
+    let ingredient_count = 2;
+    let step_count = 2;
+
+
+    function addIngredient() {
+        const container = document.getElementById('ingredients-container');
+        const div = document.createElement('div');
+        div.className = 'ingredient';
+        div.innerHTML = `
+            <input type="text" name="ingredient_${ingredient_count}" placeholder="Ingrédient ${ingredient_count}">
+            <button type="button" onclick="deleteIngredient(this)">Supprimer</button>
+            `;
+        container.appendChild(div);
+        ingredient_count++;
+        }
+    
+    
+    function deleteIngredient(button) {
+        const div = button.parentElement;
+        div.remove();
+        ingredient_count--;
+    }
+
+
+    function addStep() {
+        const container = document.getElementById('etapes-container');
+        const div = document.createElement('div');
+        div.className = 'etape';
+        div.innerHTML = `
+            <input type="text" name="step_${step_count}" placeholder="Étape ${step_count}">
+            <button type="button" onclick="deleteStep(this)">Supprimer</button>
+            `;
+        container.appendChild(div);
+        step_count++;
+        }
+    
+    function deleteStep(button) {
+        const div = button.parentElement;
+        div.remove();
+        step_count--;
+    }
 
 {% endblock %}

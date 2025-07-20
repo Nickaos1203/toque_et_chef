@@ -23,7 +23,7 @@ class Recipe(models.Model):
     duration = models.CharField(max_length=100)
     level = models.CharField(max_length=50)
     cost = models.CharField(max_length=50)
-    number = models.IntegerField()
+    number = models.IntegerField(null=True, blank=True)
     persons_number = models.CharField(max_length=50)
     ingredients = models.TextField()
     steps = models.TextField()
@@ -41,4 +41,4 @@ class Recipe(models.Model):
         return [item.strip() for item in self.steps.split(";") if item.strip()]
     
     def __str__(self):
-        return self.title
+        return f'{self.id} : {self.title}'

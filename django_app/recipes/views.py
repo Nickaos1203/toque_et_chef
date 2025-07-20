@@ -32,11 +32,23 @@ def recipe_create(request):
 @login_required
 def recipe_update(request, id):
     recipe = get_object_or_404(Recipe, id=id, author=request.user)
-    form = RecipeForm(request.POST or None, instance=recipe)
+    ingredients = recipe.ingredients
+    steps = recipe.steps
+
     if request.method == 'POST':
+        form = RecipeForm(request.POST or None, instance=recipe)
         form.save()
         return redirect('recipe_detail', id=id)
-    return render(request, 'recipes/recipes_create.html', {'form':form})
+    else:
+        form = RecipeForm(instance=recipe)
+
+    ingredients = recipe.ingredients.split(';') if recipe.ingredients else []
+    ingredients = [i.strip() for i in ingredients]
+
+    steps = recipe.steps.split(";") if recipe.steps else []
+    steps = [s.strip() for s in steps]
+    
+    return render(request, 'recipes/recipe_update.html', {'form':form, 'recipe':recipe, 'ingredients':ingredients, 'steps':steps})
 
 
 @login_required
