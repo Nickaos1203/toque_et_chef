@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Supprimer {{ recipe.title }} - Mes Recettes{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="card p-8">
+        <div class="text-center mb-8">
+            <i class="fas fa-exclamation-triangle text-red-600 text-6xl mb-4"></i>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Supprimer la recette</h1>
+            <p class="text-gray-600">Cette action est irréversible</p>
+        </div>
+        
+        <div class="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+            <h3 class="font-semibold text-red-900 mb-2">Êtes-vous sûr de vouloir supprimer cette recette ?</h3>
+            <p class="text-red-700 mb-4">
+                <strong>"{{ recipe.title }}"</strong> sera définitivement supprimée, ainsi que tous les commentaires associés.
+            </p>
+            
+            {% if recipe.image %}
+                <div class="flex items-start space-x-4">
+                    <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="w-20 h-20 object-cover rounded-lg">
+                    <div>
+                        <p class="font-medium text-red-900">{{ recipe.title }}</p>
+                        <p class="text-red-700 text-sm">{{ recipe.comments.count }} commentaire{{ recipe.comments.count|pluralize }}</p>
+                        <p class="text-red-700 text-sm">Créée le {{ recipe.created_date }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        <form method="post" class="flex justify-between">
+            {% csrf_token %}
+            <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left mr-2"></i>Annuler
+            </a>
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash mr-2"></i>Supprimer définitivement
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

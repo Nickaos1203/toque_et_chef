@@ -4,32 +4,40 @@
 
 {% block content %}
 
-<h2>Ajouter une nouvelle recette</h2>
+<!-- Template : Création d'une recette -->
+<section class="container mx-auto px-4 py-8">
+  <div class="bg-white shadow rounded-2xl p-6 max-w-2xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6">Ajouter une nouvelle recette</h2>
 
     <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
+      {% csrf_token %}
+      <div class="space-y-4">{{ form.as_p }}</div>
 
-        <div id="ingredients-container">
-            <label>Étapes :</label>
-            <div class="etape">
-                <input type="text" name="ingredient_1" placeholder="Ingrédient 1">
-            </div>
+      <div id="ingredients-container" class="mt-6">
+        <label class="block text-sm font-medium mb-2">Ingrédients :</label>
+        <div class="ingredient mb-2">
+          <input type="text" name="ingredient_1" placeholder="Ingrédient 1" class="w-full border rounded-xl px-3 py-2">
         </div>
+      </div>
 
-        <button type="button" onclick="addIngredient()">Ajouter un ingrédient</button><br><br>
+      <button type="button" onclick="addIngredient()" class="text-blue-600 hover:underline text-sm mb-4">Ajouter un ingrédient</button>
 
-        <div id="etapes-container">
-            <label>Étapes :</label>
-            <div class="etape">
-                <input type="text" name="step_1" placeholder="Étape 1">
-            </div>
+      <div id="etapes-container" class="mt-6">
+        <label class="block text-sm font-medium mb-2">Étapes :</label>
+        <div class="etape mb-2">
+          <input type="text" name="step_1" placeholder="Étape 1" class="w-full border rounded-xl px-3 py-2">
         </div>
+      </div>
 
-        <button type="button" onclick="addStep()">Ajouter une étape</button><br><br>
+      <button type="button" onclick="addStep()" class="text-blue-600 hover:underline text-sm mb-4">Ajouter une étape</button>
 
-        <button type="submit">Enregistrer</button>
+      <div class="mt-6">
+        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700">Enregistrer</button>
+      </div>
     </form>
+  </div>
+</section>
+
 
 {% endblock %}
 
@@ -38,45 +46,42 @@
 {% block script %}
 
     let ingredient_count = 2;
-    let step_count = 2;
+  let step_count = 2;
 
+  function addIngredient() {
+    const container = document.getElementById('ingredients-container');
+    const div = document.createElement('div');
+    div.className = 'ingredient mb-2';
+    div.innerHTML = `
+      <div class="flex items-center gap-2">
+        <input type="text" name="ingredient_${ingredient_count}" placeholder="Ingrédient ${ingredient_count}" class="w-full border rounded-xl px-3 py-2">
+        <button type="button" onclick="deleteIngredient(this)" class="text-red-600 hover:underline text-sm">Supprimer</button>
+      </div>`;
+    container.appendChild(div);
+    ingredient_count++;
+  }
 
-    function addIngredient() {
-        const container = document.getElementById('ingredients-container');
-        const div = document.createElement('div');
-        div.className = 'ingredient';
-        div.innerHTML = `
-            <input type="text" name="ingredient_${ingredient_count}" placeholder="Ingrédient ${ingredient_count}">
-            <button type="button" onclick="deleteIngredient(this)">Supprimer</button>
-            `;
-        container.appendChild(div);
-        ingredient_count++;
-        }
-    
-    
-    function deleteIngredient(button) {
-        const div = button.parentElement;
-        div.remove();
-        ingredient_count--;
-    }
+  function deleteIngredient(button) {
+    const div = button.closest('div.ingredient');
+    div.remove();
+  }
 
+  function addStep() {
+    const container = document.getElementById('etapes-container');
+    const div = document.createElement('div');
+    div.className = 'etape mb-2';
+    div.innerHTML = `
+      <div class="flex items-center gap-2">
+        <input type="text" name="step_${step_count}" placeholder="Étape ${step_count}" class="w-full border rounded-xl px-3 py-2">
+        <button type="button" onclick="deleteStep(this)" class="text-red-600 hover:underline text-sm">Supprimer</button>
+      </div>`;
+    container.appendChild(div);
+    step_count++;
+  }
 
-    function addStep() {
-        const container = document.getElementById('etapes-container');
-        const div = document.createElement('div');
-        div.className = 'etape';
-        div.innerHTML = `
-            <input type="text" name="step_${step_count}" placeholder="Étape ${step_count}">
-            <button type="button" onclick="deleteStep(this)">Supprimer</button>
-            `;
-        container.appendChild(div);
-        step_count++;
-        }
-    
-    function deleteStep(button) {
-        const div = button.parentElement;
-        div.remove();
-        step_count--;
-    }
+  function deleteStep(button) {
+    const div = button.closest('div.etape');
+    div.remove();
+  }
 
 {% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from .models import CustomUser
+from recipes.models import Recipe
 from .forms import LoginForm, RegisterForm
 
 

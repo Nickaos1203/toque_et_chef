@@ -5,27 +5,148 @@ Toutes les recettes
 {% endblock %}
 
 {% block content %}
-<h1>Liste des recettes</h1>
 
-{% for recipe in recipes %}
-<div>
-    <h2>{{ recipe.title }}</h2>
-    <img src={{recipe.image_url}} alt="image{{recipe.title}}"/>
-    <ul>
-        <li>Catégorie : {{recipe.category}}</li>
-        <li>tags : {{recipe.tags}}</li>
-        <li>Durée : {{recipe.duration}}</li>
-        <li>Niveau : {{recipe.level}}</li>
-        <li>Coût : {{recipe.cost}}</li>
-        <li>Nombre de personnes : {{recipe.persons_number}}</li>
-        {% if recipe.author.user %}
-        <li>Auteur : {{ recipe.author.username }}</li>
-        {% else %}
-        <li>Auteur : Un truc scraper</li>
-        <li><a href="{{ recipe.id }}">Plus de détails</a></li>
-        {% endif %}
-    </ul>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">Toutes les recettes de la communauté</h1>
+            </div>
+            
+            {% if user.is_authenticated %}
+                <a href="{% url 'recipe_create' %}" class="btn-primary mt-4 sm:mt-0">
+                    <i class="fas fa-plus mr-2"></i>Nouvelle recette
+                </a>
+            {% endif %}
+        </div>
+
+        {% comment %} Formulaire de recherche de recette {%endcomment %}
+        <form method="GET" class="mt-6">
+            <div class="flex">
+                <input type="text" 
+                       name="q" 
+                       value="{{ request.GET.q }}" 
+                       placeholder="  Chercher une recette" 
+                       class="flex-1 input-field rounded-r-none">
+                <button type="submit" class="btn btn-neutral rounded-l-none">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    {% if recipes %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for recipe in recipes %}
+                <div class="recipe-card">
+                    {% if recipe.image_url %}
+                        <div class="aspect-w-16 aspect-h-9 bg-gray-200">
+                            <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="w-full h-48 object-cover">
+                        </div>
+                    {% else %}
+                        <div class="w-full h-48 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                            <i class="fas fa-utensils text-primary-600 text-3xl"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">{{ recipe.title }}</h3>
+                        {% comment %} <p class="text-gray-600 mb-3 text-sm line-clamp-2">{{ recipe.description|truncatewords:15 }}</p> {% endcomment %}
+                        
+                        <div class="flex items-center text-xs text-gray-500 mb-3 space-x-3">
+                            <span><i class="far fa-clock mr-1"></i>{{ recipe.duration }}</span>
+                            <span><i class="fas fa-users mr-1"></i>{{ recipe.persons_number }}</span>
+                            <span class="px-2 py-1 bg-gray-100 rounded-full">{{ recipe.level }}</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-6 h-6 bg-primary-600 rounded-full flex items-center justify-center">
+                                  {% if recipe.author %}
+                                    <span class="text-black text-xs font-medium">
+                                        {{ recipe.author }}
+                                    </span>
+                                  {% else %}
+                                    <span class="text-black text-xs font-medium">
+                                        Super Scraper
+                                    </span>
+                                  {% endif %}
+                                </div>
+                            </div>
+                            <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-neutral py-1 px-3 text-xs">
+                                Voir la recette
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-16">
+            <i class="fas fa-search text-gray-300 text-6xl mb-4"></i>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune recette trouvée</h3>
+            <p class="text-gray-600 mb-6">
+                {% if request.GET.q %}
+                    Aucune recette ne correspond à votre recherche "{{ request.GET.q }}"
+                {% else %}
+                    Il n'y a pas encore de recettes partagées.
+                {% endif %}
+            </p>
+            {% if user.is_authenticated %}
+                <a href="{% url 'recipe_create' %}" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i>Créer une recette
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
 </div>
-{% endfor %}
+
+  
+  <!-- Pagination -->
+  <div class="flex justify-center mt-8 space-x-2">
+
+  {# Première page #}
+  {% if page_obj.number > 3 %}
+    <a href="?page=1">
+      <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">1</button>
+    </a>
+    {% if page_obj.number > 4 %}
+      <span class="px-2 py-1 text-sm text-gray-400">…</span>
+    {% endif %}
+  {% endif %}
+
+  {# Page précédente #}
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}">
+      <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">{{ page_obj.previous_page_number }}</button>
+    </a>
+  {% endif %}
+
+  {# Page actuelle #}
+  <button class="px-3 py-1 rounded-lg bg-gray-800 text-white text-sm">{{ page_obj.number }}</button>
+
+  {# Page suivante #}
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">
+      <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">{{ page_obj.next_page_number }}</button>
+    </a>
+  {% endif %}
+
+  {# Dernière page #}
+  {% with cutoff=page_obj.paginator.num_pages|add:"-2" %}
+    {% if page_obj.number < cutoff %}
+      {% with almost_last=page_obj.paginator.num_pages|add:"-3" %}
+        {% if page_obj.number < almost_last %}
+          <span class="px-2 py-1 text-sm text-gray-400">…</span>
+        {% endif %}
+      {% endwith %}
+      <a href="?page={{ page_obj.paginator.num_pages }}">
+        <button class="px-3 py-1 rounded-lg border border-gray-300 text-sm">{{ page_obj.paginator.num_pages }}</button>
+      </a>
+    {% endif %}
+  {% endwith %}
+
+</div>
+</section>
 
 {% endblock %}

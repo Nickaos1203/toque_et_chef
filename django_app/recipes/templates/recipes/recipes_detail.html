@@ -1,56 +1,135 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Toutes les recettes
+Détail de la recette : {{recipe.title}}
 {% endblock %}
 
 {% block content %}
 
-<div>
-    <h2>{{ recipe.title }}</h2>
-    <img src={{recipe.image_url}} alt="image{{recipe.title}}"/>
-    <h4>Caractéristiques :</h4>
-    <ul>
-        <li>Saison : {{recipe.season}}</li>
-        <li>Catégorie : {{recipe.category}}</li>
-        <li>tags : {{recipe.tags}}</li>
-        <li>Durée : {{recipe.duration}}</li>
-        <li>Niveau : {{recipe.level}}</li>
-        <li>Coût : {{recipe.cost}}</li>
-        <li>Nombre de personnes : {{recipe.persons_number}}</li>
-        {% if recipe.author.user %}
-        <li>Auteur : {{ recipe.author.username }}</li>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="card overflow-hidden">
+        {% if recipe.image_url %}
+            <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="w-full h-64 md:h-80 object-cover">
         {% else %}
-        <li>Auteur : Un truc scraper</li>
+            <div class="w-full h-64 md:h-80 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                <i class="fas fa-utensils text-primary-600 text-6xl"></i>
+            </div>
         {% endif %}
-    </ul>
-
-    <h4>Ingrédients :</h4>
-    <ul>
-    {% for ingredient in recipe.display_ingredients_list %}
-        <li>{{ingredient}}</li>
-    {% endfor %}
-    </ul>
-
-    <h4>Etapes :</h4>
-    <ol>
-    {% for step in recipe.display_steps_list %}
-        <li>{{step}}</li>
-    {% endfor %}
-    </ol>
-</div>
-
-<div>
-    <h2>Commentaires</h2>
-    {% for comment in comments %}
-    <ul>
-        <li>Titre : {{comment.title}}</li>
-        <li>Date : {{comment.created_date}}</li>
-        <li>Auteur : {{comment.author.username}}</li>
-        <li>Note : {{comment.grade}}</li>
-        <li>Avis : {{comment.contain}}</li>
-    </ul>
-    {% endfor %}
+        
+        <div class="p-8">
+            <div class="flex items-center justify-between mb-6">
+                <h1 class="text-3xl font-bold text-gray-900">{{ recipe.title }}</h1>
+            </div>
+            
+            <div class="flex items-center space-x-6 mb-6 text-sm text-gray-600">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center">
+                        <span class="text-black font-medium">
+                            {{ recipe.author }}
+                        </span>
+                    </div>
+                    <div>
+                        {% comment %} <p class="font-medium text-gray-900">{{ recipe.author.get_full_name|default:recipe.author.username }}</p> {% endcomment %}
+                        <p class="text-gray-500">{{ recipe.date|date:"d M Y" }}</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <span><i class="far fa-clock mr-1"></i>Durée : {{ recipe.duration }} préparation</span>
+                    <span><i class="fas fa-users mr-1"></i>Quantité : {{ recipe.persons_number }}</span>
+                    <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">{{ recipe.level }}</span>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-list mr-2 text-primary-600"></i>Ingrédients
+                    </h3>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <ul class="space-y-2">
+                            {% for ingredient in recipe.display_ingredients_list %}
+                                  <li class="flex items-start">
+                                      <i class="fas fa-circle text-primary-600 text-xs mt-2 mr-2"></i>
+                                      <span>{{ ingredient.strip }}</span>
+                                  </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-tasks mr-2 text-primary-600"></i>Etapes
+                    </h3>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                      {% for step in recipe.display_steps_list %}
+                      <li class="bg-gray-50 rounded-lg p-4 prose prose-sm max-w-none"> {{step}}
+                          {% comment %} <div class="prose prose-sm max-w-none">{{ step }}</div>                         {% endcomment %}
+                      </li>
+                      {% endfor %}
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Comments Section -->
+    <div class="mt-8">
+        <div class="card p-8">
+            <h3 class="text-2xl font-semibold text-gray-900 mb-6">
+                <i class="fas fa-comments mr-2 text-primary-600"></i>
+                Commentaires ({{ comments.count }})
+            </h3>
+            
+            {% if user.is_authenticated %}
+                {% comment %} <form method="post" action="{% url 'comment_create' recipe.id %}" class="mb-8">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ comment_form.content }}
+                    </div>
+                    <button type="submit" class="btn-black">
+                        <i class="fas fa-paper-plane mr-2"></i>Ajouter un commentaire
+                    </button>
+                </form> {% endcomment %}
+                <div class="mb-4">
+                    <button>
+                        <a href="{% url 'comment_create' recipe.id %}"><i class="fas fa-paper-plane mr-2"></i>Ajouter un commentaire</a>
+                    </button>
+                </div>
+            {% else %}
+                <div class="bg-gray-50 rounded-lg p-4 mb-8 text-center">
+                    <p class="text-gray-600 mb-4">Connectez-vous pour ajouter un commentaire</p>
+                    <a href="{% url 'home' %}" class="btn-primary">Se connecter</a>
+                </div>
+            {% endif %}
+            
+            <div class="space-y-6">
+                {% for comment in comments %}
+                    <div class="border-l-4 border-primary-600 pl-4 py-2">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
+                                    <span class="text-black text-sm font-medium">
+                                        {{ comment.author}},
+                                    </span>
+                                </div>
+                                <span class="text-gray-500 text-sm">le {{ comment.created_date}}</span>
+                            </div>
+                            {% if user == comment.author %}
+                                <a href="{% url 'comment_delete' comment.id %}" class="text-red-600 hover:text-red-800 text-sm">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <p class="text-gray-700">{{ comment.contain|linebreaks }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-600 text-center py-8">Aucun commentaire pour le moment. Soyez le premier à donner votre avis !</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
 
 {% endblock %}
