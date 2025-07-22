@@ -39,9 +39,9 @@
         {% block content %}{% endblock %}
     <main>
     
-    <!-- Chatbot -->
+<!-- Chatbot -->
     <div id="chatbot" class="fixed bottom-6 right-6 z-50">
-        <button id="chatbot-toggle" class="bg-stone-950 hover:bg-primary-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
+        <button id="chatbot-toggle" class="bg-black hover:bg-primary-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
             <i class="fas fa-comments text-xl"></i>
         </button>
         
@@ -54,16 +54,17 @@
             </div>
             <div id="chatbot-messages" class="h-64 overflow-y-auto p-4 space-y-2">
                 <div class="bg-gray-100 rounded-lg p-2 text-sm">
-                    Bonjour ! Je peux vous aider à trouver des recettes ou répondre à vos questions culinaires.
+                    Bonjour ! Je peux vous aider à trouver des recettes dans notre base de données. Posez-moi des questions sur les ingrédients, types de plats, difficulté, etc.
                 </div>
             </div>
             <div class="p-4 border-t">
                 <div class="flex space-x-2">
-                    <input type="text" id="chatbot-input" placeholder="Tapez votre message..." class="flex-1 input-field py-2 px-3 text-sm">
-                    <button id="chatbot-send" class="btn-primary py-2 px-3 text-sm">
+                    <input type="text" id="chatbot-input" placeholder="Tapez votre message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
+                    <button id="chatbot-send" class="bg-primary-600 text-black hover:bg-primary-700 px-3 py-2 rounded-lg text-sm">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
+                <div id="chatbot-loading" class="hidden text-center text-sm text-gray-500 mt-2">Recherche en cours...</div>
             </div>
         </div>
     </div>
@@ -73,7 +74,7 @@
 
 
 <script>
-    // Chatbot functionality
+// Chatbot functionality
     const chatbotToggle = document.getElementById('chatbot-toggle');
     const chatbotWindow = document.getElementById('chatbot-window');
     const chatbotClose = document.getElementById('chatbot-close');
@@ -92,30 +93,53 @@
     function addMessage(message, isUser = false) {
         const messageDiv = document.createElement('div');
         messageDiv.className = `rounded-lg p-2 text-sm ${isUser ? 'bg-primary-600 text-white ml-8' : 'bg-gray-100 mr-8'}`;
-        messageDiv.textContent = message;
+        
+        if (isUser) {
+            messageDiv.textContent = message;
+        } else {
+            // Pour les réponses du bot, permettre le HTML pour les liens
+            messageDiv.innerHTML = message.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
+        
         chatbotMessages.appendChild(messageDiv);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
 
-    function sendMessage() {
+    async function sendMessage() {
         const message = chatbotInput.value.trim();
         if (!message) return;
 
         addMessage(message, true);
         chatbotInput.value = '';
+        
+        // Afficher l'indicateur de chargement
+        const loadingDiv = document.getElementById('chatbot-loading');
+        loadingDiv.classList.remove('hidden');
 
-        // Simple chatbot responses
-        setTimeout(() => {
-            const responses = [
-                "Voici quelques suggestions de recettes basées sur votre recherche...",
-                "Pour cette recette, je recommande d'utiliser des ingrédients frais.",
-                "Cette technique de cuisson donnera les meilleurs résultats.",
-                "N'hésitez pas à adapter les quantités selon vos goûts !",
-                "Consultez notre section recettes pour plus d'idées."
-            ];
-            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-            addMessage(randomResponse);
-        }, 1000);
+        try {
+            // Envoyer la requête à l'API du chatbot
+            const response = await fetch('/api/chatbot/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            
+            // Masquer l'indicateur de chargement
+            loadingDiv.classList.add('hidden');
+            
+            if (response.ok) {
+                addMessage(data.response);
+            } else {
+                addMessage('Désolé, une erreur s\'est produite. Veuillez réessayer.');
+            }
+        } catch (error) {
+            loadingDiv.classList.add('hidden');
+            addMessage('Erreur de connexion. Veuillez vérifier votre connexion internet.');
+        }
     }
 
     chatbotSend.addEventListener('click', sendMessage);
@@ -124,6 +148,7 @@
             sendMessage();
         }
     });
+
     {% block script %}{% endblock %}
 </script>
 

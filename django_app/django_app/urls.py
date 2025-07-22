@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from users.views import register_page, login_page, logout_page
-from recipes.views import home
+from recipes.views import home, chatbot_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,5 +28,6 @@ urlpatterns = [
     path('', home, name='home'),
     path('user/', include('users.urls')),
     path('recipes/', include('recipes.urls')),
-    path('comments/', include('comments.urls'))
+    path('comments/', include('comments.urls')),
+    path('api/chatbot/', chatbot_api, name='chatbot_api'),
 ]
