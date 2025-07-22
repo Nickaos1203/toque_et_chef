@@ -148,3 +148,5 @@ INTERNAL_IPS = [
 ]
 
 NPM_BIN_PATH =os.getenv("NPM_PATH")
+
+GROQ_API_KEY = os.getenv("API_KEY_GROQ")
