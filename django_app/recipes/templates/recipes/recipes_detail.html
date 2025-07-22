@@ -7,7 +7,11 @@ Détail de la recette : {{recipe.title}}
 {% block content %}
 
 <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="card overflow-hidden">
+    <div>
+        <button onclick="window.history.back()"><b>← Retour</b></button>
+    </div>
+    
+    <div class="card overflow-hidden mt-6">
         {% if recipe.image_url %}
             <img src="{{ recipe.image_url }}" alt="{{ recipe.title }}" class="w-full h-64 md:h-80 object-cover">
         {% else %}
@@ -22,21 +26,26 @@ Détail de la recette : {{recipe.title}}
             </div>
             
             <div class="flex items-center space-x-6 mb-6 text-sm text-gray-600">
-                <div class="flex items-center space-x-2">
-                    <div class="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center">
-                        <span class="text-black font-medium">
-                            {{ recipe.author }}
-                        </span>
-                    </div>
+                {% comment %} <div class="flex items-center space-x-2">
                     <div>
-                        {% comment %} <p class="font-medium text-gray-900">{{ recipe.author.get_full_name|default:recipe.author.username }}</p> {% endcomment %}
-                        <p class="text-gray-500">{{ recipe.date|date:"d M Y" }}</p>
+                        {% if recipe.author %}
+                        <p class="font-medium text-gray-900">Partagée par {{ recipe.author.get_full_name|default:recipe.author }}</p>
+                        {% else %}
+                        <p class="font-medium text-gray-900">Partagée par Super Scraper</p>
+                        {% endif %}
+                        <p class="text-gray-500">le {{ recipe.date|date:"d M Y" }}</p>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 
                 <div class="flex items-center space-x-4">
-                    <span><i class="far fa-clock mr-1"></i>Durée : {{ recipe.duration }} préparation</span>
-                    <span><i class="fas fa-users mr-1"></i>Quantité : {{ recipe.persons_number }}</span>
+                    {% if recipe.author %}
+                    <span><i class="fa-solid fa-user"></i> Par <b>{{ recipe.author }}</b></span>
+                    {% else %}
+                    <span><i class="fa-solid fa-user"></i > Par <b>Super Scraper</b></span>
+                    {% endif %}
+                    <span><i class="fa-solid fa-calendar"></i> Le {{ recipe.date }}</span>
+                    <span><i class="far fa-clock mr-1"></i> Durée : {{ recipe.duration }}</span>
+                    <span><i class="fas fa-users mr-1"></i> Quantité : {{ recipe.persons_number }}</span>
                     <span class="px-3 py-1 bg-gray-100 rounded-full text-xs">{{ recipe.level }}</span>
                 </div>
             </div>
@@ -64,9 +73,7 @@ Détail de la recette : {{recipe.title}}
                     </h3>
                     <ol class="list-decimal list-inside text-gray-700 space-y-2">
                       {% for step in recipe.display_steps_list %}
-                      <li class="bg-gray-50 rounded-lg p-4 prose prose-sm max-w-none"> {{step}}
-                          {% comment %} <div class="prose prose-sm max-w-none">{{ step }}</div>                         {% endcomment %}
-                      </li>
+                      <li class="bg-gray-50 rounded-lg p-4 prose prose-sm max-w-none"> {{step}}</li>
                       {% endfor %}
                     </ol>
                 </div>
@@ -83,17 +90,8 @@ Détail de la recette : {{recipe.title}}
             </h3>
             
             {% if user.is_authenticated %}
-                {% comment %} <form method="post" action="{% url 'comment_create' recipe.id %}" class="mb-8">
-                    {% csrf_token %}
-                    <div class="mb-4">
-                        {{ comment_form.content }}
-                    </div>
-                    <button type="submit" class="btn-black">
-                        <i class="fas fa-paper-plane mr-2"></i>Ajouter un commentaire
-                    </button>
-                </form> {% endcomment %}
                 <div class="mb-4">
-                    <button>
+                    <button class="btn btn-neutral">
                         <a href="{% url 'comment_create' recipe.id %}"><i class="fas fa-paper-plane mr-2"></i>Ajouter un commentaire</a>
                     </button>
                 </div>
@@ -116,11 +114,6 @@ Détail de la recette : {{recipe.title}}
                                 </div>
                                 <span class="text-gray-500 text-sm">le {{ comment.created_date}}</span>
                             </div>
-                            {% if user == comment.author %}
-                                <a href="{% url 'comment_delete' comment.id %}" class="text-red-600 hover:text-red-800 text-sm">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            {% endif %}
                         </div>
                         <p class="text-gray-700">{{ comment.contain|linebreaks }}</p>
                     </div>

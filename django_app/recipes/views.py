@@ -33,13 +33,32 @@ def recipe_detail(request, id):
 
 @login_required
 def recipe_create(request):
-    form = RecipeForm(request.POST)
-    if form.is_valid():
-        form.save()
-        return redirect('recipes')
-    return render(request, 
-        'recipes/recipes_create.html',
-        {'form':form})
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.author = request.user
+
+            # Récupération des ingrédients dynamiques
+            ingredients = []
+            steps = []
+
+            for key, value in request.POST.items():
+                if key.startswith('ingredient_') and value.strip():
+                    ingredients.append(value.strip())
+                if key.startswith('step_') and value.strip():
+                    steps.append(value.strip())
+
+            recipe.ingredients = ";".join(ingredients)
+            recipe.steps = ";".join(steps)
+
+            recipe.save()
+            messages.success(request, "La recette est créée avec succès !")
+            return redirect('recipes_list')  # Assure-toi que cette route existe
+    else:
+        form = RecipeForm()
+
+    return render(request, 'recipes/recipe_create.html', {'form': form})
 
 
 @login_required

@@ -7,6 +7,4 @@ ipykernel
 django
 pillow
 django-tailwind
-# djangorestframework
-# django-cors-headers
-# djangorestframework-simplejwt
+groq
