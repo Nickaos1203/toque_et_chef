@@ -15,7 +15,7 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-# loading secret variables
+# loading secret variables in .env
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -43,12 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # configuration django_rest_framework
-    'rest_framework',
-    'rest_framework_simplejwt',
-
-    # apps django
+    # Tailwind apps
+    'tailwind',
+    'theme',
+    # Other Django apps
     'users',
     'recipes',
     'comments',
@@ -86,14 +84,6 @@ WSGI_APPLICATION = 'django_app.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': os.getenv("DB_ENGINE"),
@@ -150,10 +140,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Declaration of custom user
 AUTH_USER_MODEL = 'users.CustomUser'
 
+# Declaration of Tailwinn
+TAILWIND_APP_NAME = 'theme'
 
-# Pagination management
-REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 4,
-    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
-}
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH =os.getenv("NPM_PATH")

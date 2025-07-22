@@ -17,14 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from users.views import register_page, login_page, logout_page
+from recipes.views import home
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # paths authentication
-    path('api-auth/', include('rest_framework.urls')),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    # paths apps
-    path('api/recipes/', include('recipes.urls')), 
-    path('api/users/', include('users.urls')), 
-    path('api/comments/', include('comments.urls')), 
+    path('register/', register_page, name='register'),
+    path('login/', login_page, name='login'),
+    path('logout/', logout_page, name='logout'),
+    path('', home, name='home'),
+    path('user/', include('users.urls')),
+    path('recipes/', include('recipes.urls')),
+    path('comments/', include('comments.urls'))
 ]

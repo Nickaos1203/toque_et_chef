@@ -1,24 +1,102 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
 
-from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+import random
+from django.urls import reverse_lazy
+from django.contrib import messages
+
 from .models import Recipe
-from .serializers import RecipeSerializer
+from .forms import RecipeForm
 
 
-class RecipeViewSet(ModelViewSet):
+def home(request):
+    recipes = Recipe.objects.order_by("?")[:6]
+    return render(request, "recipes/home.html", {'recipes':recipes})
 
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
+
+def recipes_list(request):
+    recipes = Recipe.objects.all()
+    pagination = Paginator(recipes, 12)     # Pagination de 10 recettes par page
+
+    page_number = request.GET.get('page')
+    page_obj = pagination.get_page(page_number)
+    return render(request=request,template_name="recipes/recipes_list.html", context={'page_obj':page_obj, 'recipes': page_obj.object_list})
 
 
-class RecipeByAuthorViewSet(ModelViewSet):
+def recipe_detail(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
+    comments = recipe.comments.all()
+    return render(request=request, template_name="recipes/recipes_detail.html", context={'recipe':recipe, 'comments':comments})
 
-    serializer_class = RecipeSerializer
-    queryset = Recipe.objects.all()
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        author_id = self.request.GET.get('author')
-        if author_id:
-            queryset = queryset.filter(author_id=author_id)
-            return queryset
+@login_required
+def recipe_create(request):
+    if request.method == 'POST':
+        form = RecipeForm(request.POST)
+        if form.is_valid():
+            recipe = form.save(commit=False)
+            recipe.author = request.user
+
+            # Récupération des ingrédients dynamiques
+            ingredients = []
+            steps = []
+
+            for key, value in request.POST.items():
+                if key.startswith('ingredient_') and value.strip():
+                    ingredients.append(value.strip())
+                if key.startswith('step_') and value.strip():
+                    steps.append(value.strip())
+
+            recipe.ingredients = ";".join(ingredients)
+            recipe.steps = ";".join(steps)
+
+            recipe.save()
+            messages.success(request, "La recette est créée avec succès !")
+            return redirect('recipes_list')  # Assure-toi que cette route existe
+    else:
+        form = RecipeForm()
+
+    return render(request, 'recipes/recipe_create.html', {'form': form})
+
+
+@login_required
+def recipe_update(request, id):
+    recipe = get_object_or_404(Recipe, id=id, author=request.user)
+    ingredients = recipe.ingredients
+    steps = recipe.steps
+
+    if request.method == 'POST':
+        form = RecipeForm(request.POST or None, instance=recipe)
+        form.save()
+        return redirect('recipe_detail', id=id)
+    else:
+        form = RecipeForm(instance=recipe)
+
+    ingredients = recipe.ingredients.split(';') if recipe.ingredients else []
+    ingredients = [i.strip() for i in ingredients]
+
+    steps = recipe.steps.split(";") if recipe.steps else []
+    steps = [s.strip() for s in steps]
+    
+    return render(request, 'recipes/recipe_update.html', {'form':form, 'recipe':recipe, 'ingredients':ingredients, 'steps':steps})
+
+
+@login_required
+def recipe_delete(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
+    if request.user != recipe.author:
+        return render(request, '403.html', status=403)  # Ou redirige vers une page d'erreur
+
+    if request.method == 'POST':
+        recipe.delete()
+        messages.success(request, 'Recette supprimée avec succès!')
+        return redirect('my_recipes')
+    return render(request, 'recipes/recipe_delete.html', {'recipe':recipe})
+
+
+@login_required
+def my_recipes(request):
+    recipes = Recipe.objects.filter(author=request.user)
+    return render(request, 'recipes/my_recipes.html', {'recipes': recipes})
