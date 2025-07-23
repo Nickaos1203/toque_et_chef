@@ -17,7 +17,7 @@ load_dotenv()
 class GroqLLM(LLM):
     """Wrapper LangChain pour Groq"""
     
-    def __init__(self, api_key: str, model: str = "mixtral-8x7b-32768"):
+    def __init__(self, api_key: str, model: str = "llama-3.3-70b-versatile"):
         super().__init__()
         self.client = Groq(api_key=os.getenv("API_KEY_GROQ"))
         self.model = model
