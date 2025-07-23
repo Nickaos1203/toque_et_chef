@@ -182,10 +182,10 @@ class RecipeRAGSystem:
                 level = metadata.get('level')
                 prep_time = metadata.get('duration')
                 
-                response += f"🍽️ **{title}**\n"
-                response += f"   Lien: http://127.0.0.1:8000/recipes/{recipe_id}/\n"
+                response += f"🍽️ **{title}**\n"              
                 response += f"   Difficulté: {level}\n"
-                response += f"   Temps de préparation: {prep_time} min\n\n"
+                response += f"   Temps de préparation: {prep_time}\n\n"
+                response += f"   Lien: http://127.0.0.1:8000/recipes/{recipe_id}/\n"
             
             return response
             
