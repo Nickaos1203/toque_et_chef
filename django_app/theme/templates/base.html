@@ -26,9 +26,9 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
                 {% for message in messages %}
                     <div class="alert alert-{{ message.tags }} mb-4 p-4 rounded-lg border-l-4 
-                         {% if message.tags == 'success' %}bg-green-50 border-green-400 text-green-700{% endif %}
-                         {% if message.tags == 'error' %}bg-red-50 border-red-400 text-red-700{% endif %}
-                         {% if message.tags == 'info' %}bg-blue-50 border-blue-400 text-blue-700{% endif %}">
+                         {% if message.tags == 'success' %}bg-green border-green-400 text-green-700{% endif %}
+                         {% if message.tags == 'error' %}bg-red border-red-400 text-red-700{% endif %}
+                         {% if message.tags == 'info' %}bg-blue border-blue-400 text-blue-700{% endif %}">
                         {{ message }}
                     </div>
                 {% endfor %}
@@ -41,26 +41,26 @@
     
 <!-- Chatbot -->
     <div id="chatbot" class="fixed bottom-6 right-6 z-50">
-        <button id="chatbot-toggle" class="bg-black hover:bg-primary-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
+        <button id="chatbot-toggle" class="bg-neutral hover:bg-primary-700 text-white rounded-full p-4 shadow-lg transition-all duration-300 hover:scale-110">
             <i class="fas fa-comments text-xl"></i>
         </button>
         
         <div id="chatbot-window" class="absolute bottom-16 right-0 w-80 bg-white rounded-lg shadow-xl border hidden">
-            <div class="flex items-center justify-between p-4 border-b bg-primary-600 text-white rounded-t-lg">
-                <h3 class="font-medium">Assistant Recettes</h3>
+            <div class="flex items-center justify-between p-4 border-b bg-primary-600 text-black rounded-t-lg">
+                <h3 class="font-medium">Mon assistant IA</h3>
                 <button id="chatbot-close" class="text-white hover:text-gray-200">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div id="chatbot-messages" class="h-64 overflow-y-auto p-4 space-y-2">
-                <div class="bg-gray-100 rounded-lg p-2 text-sm">
+                <div class="bg-primary-content rounded-lg p-2 text-sm">
                     Bonjour ! Je peux vous aider à trouver des recettes dans notre base de données. Posez-moi des questions sur les ingrédients, types de plats, difficulté, etc.
                 </div>
             </div>
             <div class="p-4 border-t">
                 <div class="flex space-x-2">
                     <input type="text" id="chatbot-input" placeholder="Tapez votre message..." class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm">
-                    <button id="chatbot-send" class="bg-primary-600 text-black hover:bg-primary-700 px-3 py-2 rounded-lg text-sm">
+                    <button id="chatbot-send" class="btn btn-neutral btn-sm">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
@@ -92,7 +92,7 @@
 
     function addMessage(message, isUser = false) {
         const messageDiv = document.createElement('div');
-        messageDiv.className = `rounded-lg p-2 text-sm ${isUser ? 'bg-primary-600 text-white ml-8' : 'bg-gray-100 mr-8'}`;
+        messageDiv.className = `rounded-lg p-2 text-sm ${isUser ? 'text-black ml-8' : 'bg-gray mr-8'}`;
         
         if (isUser) {
             messageDiv.textContent = message;
