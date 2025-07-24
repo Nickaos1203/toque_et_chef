@@ -140,7 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Declaration of custom user
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# Declaration of Tailwinn
+# Declaration of Tailwind
 TAILWIND_APP_NAME = 'theme'
 
 INTERNAL_IPS = [

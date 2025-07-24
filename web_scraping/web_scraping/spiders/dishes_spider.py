@@ -4,7 +4,7 @@ import scrapy
 import re
 
 class MarmiteSpider(scrapy.Spider):
-    name= "dishes_spider"
+    name= "dishe_spider"
     allowed_domains = ["marmiton.org"]
     start_urls = ["https://www.marmiton.org/recettes?type=platprincipal&page=" + str(x) for x in range(1, 10)]
 
