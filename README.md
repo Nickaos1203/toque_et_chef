@@ -128,27 +128,20 @@ toque_et_chef/
                         |--pipelines.py
                         |--settings.py
                 |--__init__.py
-                |--fusion_filrs.py
+                |--fusion_files.py
                 |--scrapy.cfg
                 |--script_db.py
         |--.env
         |--.gitignore
         |--README.md
         |--requirements.txt
-
-
-
-
-
 ```
-
-
 
 ## 🚀 Lancement du projet
 
 #### Pré-requis
-- Assurez-vous d'avoir installer python
-- Assurez-vous d'être  Windows
+- Assurez-vous d'avoir installer Python
+- Assurez-vous d'être sur Windows
 - Assurez-vous d'avoir installer node et npm
 - Assurez-vous d'utiliser la version 17 de PostgreSQL
 
@@ -174,7 +167,7 @@ pip install -r requirements.txt
 ```bash
 touch .env
 ```
-- Ajouter le scripts suivant suivantes au fichier .env :
+- Ajouter le script suivant au fichier .env :
 ```
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME={le nom de votre base de données PostgreSQL}
@@ -223,7 +216,7 @@ scrapy crawl dessert_spider -o dessert_dataset.json
 ```bash
 python fusion_files.py
 ```
-- Injection dans la base de données :
+- Injection des données dans la base de données :
 ```bash
 python script_db.py
 ```

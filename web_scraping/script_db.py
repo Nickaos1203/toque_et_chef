@@ -17,7 +17,7 @@ for var in ['db_name', 'db_user', 'db_password', 'db_port']:
     print(f"{var} → {repr(val)}")
 
 
-# Connexion with 'toque_et_chef' database
+# Connexion avec la base de données'toque_et_chef'
 conn = psycopg2.connect(
     database=os.getenv("db_name"),
     user=os.getenv("db_user"),
